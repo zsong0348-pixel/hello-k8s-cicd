@@ -7,7 +7,7 @@ app = Flask(__name__)
 @app.get("/")
 def index():
     return {
-        "message": "hello from Kubernetes",
+        "message": "hello from Kubernetes.",
         "version": os.getenv("APP_VERSION", "local"),
     }
 
