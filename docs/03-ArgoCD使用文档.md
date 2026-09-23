@@ -2,6 +2,8 @@
 
 本项目通过 Argo CD 把 Git 仓库 `k8s/` 目录中的资源部署到 Docker Desktop 的 Kubernetes。第一次搭建按第 1 至 3 节执行；以后主要看第 4、5 节。普通发布不需要安装 Argo CD 命令行工具，也不需要手工点 `Sync`。
 
+想知道它在整条发布链中的位置，先看 [04-一次发布到底发生了什么](04-一次发布到底发生了什么.md) 第 4 至 6 站。
+
 ## 1. 安装前确认
 
 先启动 Docker Desktop 并启用 Kubernetes。打开 PowerShell，执行：
@@ -62,7 +64,7 @@ kubectl -n hello rollout status deployment/hello-k8s --timeout=5m
 kubectl -n argocd port-forward svc/argocd-server 8080:443
 ```
 
-保持窗口打开，浏览器访问 `https://localhost:8080`。本地自签名证书可能触发浏览器警告，确认访问的是自己启动的 `localhost` 后继续。
+保持窗口打开，浏览器访问 `https://localhost:8080`。登录后可直接打开本项目的应用树：`https://localhost:8080/applications/argocd/hello-k8s?view=tree&resource=`。该地址只在这台电脑的 8080 端口转发运行时有效，别人的电脑或端口转发关闭后不能直接访问。本地自签名证书可能触发浏览器警告，确认访问的是自己启动的 `localhost` 后继续。
 
 首次登录的用户名是 `admin`。再开一个 PowerShell 获取初始密码：
 
@@ -74,6 +76,20 @@ $encoded = kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath=
 使用第二行输出的明文密码，不能把第一行的 Base64 结果直接填进登录框。初始 Secret 可能在管理员改密后被删除；如果它不存在，应找现有管理员获取账号，不要重装 Argo CD。
 
 登录后点击 `hello-k8s`，看顶部的 `SYNC STATUS` 和 `HEALTH STATUS`，再看下面的 Namespace、Service、Deployment 资源图。点击异常资源可查看状态、事件和差异。常见状态：
+
+下面是依据本项目 YAML 画的**资源树示意图**，帮助你对照界面识别节点；这不是实时截图，Pod 名和状态以你当前页面为准：
+
+```mermaid
+flowchart LR
+    A[hello-k8s Application<br/>看 Synced / Healthy] --> N[hello Namespace]
+    A --> S[hello-k8s Service<br/>应用入口]
+    A --> D[hello-k8s Deployment<br/>期望 2 个副本]
+    D --> R[ReplicaSet<br/>由 Deployment 管理]
+    R --> P1[Pod 1<br/>期望 1/1 Running]
+    R --> P2[Pod 2<br/>期望 1/1 Running]
+```
+
+例如顶部是 `Synced / Progressing` 时，先点 Deployment，再点其下面未就绪的 Pod 查看状态；也可以照第 5 节运行命令看 Events 和日志。等两个 Pod 都就绪后刷新界面，通常会变为 `Synced / Healthy`。
 
 | 状态 | 含义与动作 |
 |---|---|

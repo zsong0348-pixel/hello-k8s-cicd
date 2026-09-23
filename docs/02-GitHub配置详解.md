@@ -2,6 +2,8 @@
 
 本文件逐项解释仓库 zsong0348-pixel/hello-k8s-cicd 的配置。
 
+第一次接触发布流程时，先看 [04-一次发布到底发生了什么](04-一次发布到底发生了什么.md)，再用本文核对配置字段。
+
 ## 1. 仓库设置
 
 仓库地址：
@@ -20,7 +22,7 @@ https://github.com/zsong0348-pixel/hello-k8s-cicd
 
 路径：Settings -> Actions -> General -> Workflow permissions。
 
-当前流水线需要自动提交 k8s/deployment.yaml，因此选择 Read and write permissions。没有写权限时，最后的 git push 会出现 403。
+这里设置的是 `GITHUB_TOKEN` 的**默认权限**。当前工作流已在 `.github/workflows/ci-cd.yaml` 明确声明 `contents: write` 和 `packages: write`，通常无需把仓库默认权限改成 `Read and write permissions`。若 `Commit deployment change` 的 `git push` 报 403，先检查工作流的 `contents: write`、分支保护和仓库/组织策略；若 GHCR 上传失败，检查 `packages: write` 及 Package 的 Actions 访问权限。参见 [GitHub 的权限说明](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#defining-access-for-the-github_token-scopes)。
 
 ### 1.3 Actions 权限
 
