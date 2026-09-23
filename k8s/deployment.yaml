@@ -15,13 +15,13 @@ spec:
     spec:
       containers:
         - name: hello-k8s
-          image: ghcr.io/zsong0348-pixel/hello-k8s:1f7a1764dda9d44d0d24b1437e324a1fc8561151
+          image: ghcr.io/zsong0348-pixel/hello-k8s:5f976568de5940b7358ac255b07cdd3276d42014
           ports:
             - name: http
               containerPort: 8080
           env:
             - name: APP_VERSION
-              value: "1f7a1764dda9d44d0d24b1437e324a1fc8561151"
+              value: "5f976568de5940b7358ac255b07cdd3276d42014"
           readinessProbe:
             httpGet:
               path: /healthz

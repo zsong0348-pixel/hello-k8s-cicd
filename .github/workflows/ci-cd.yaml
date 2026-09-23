@@ -3,6 +3,9 @@ name: ci-cd
 on:
   push:
     branches: [main]
+    paths-ignore:
+      - 'docs/**'
+      - 'README.md'
 
 permissions:
   contents: write
