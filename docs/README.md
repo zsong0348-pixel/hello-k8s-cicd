@@ -6,6 +6,7 @@
 
 1. [01-使用文档.md](01-使用文档.md)：启动环境、访问系统、发布新版本、查看日志、回滚。
 2. [02-GitHub配置详解.md](02-GitHub配置详解.md)：GitHub 仓库、Actions、GHCR、Kubernetes 和 Argo CD 每个配置的解释。
+3. [03-ArgoCD使用文档.md](03-ArgoCD使用文档.md)：第一次安装 Argo CD、注册应用、登录界面和排查同步问题。
 
 项目地址：
 
@@ -18,4 +19,3 @@ https://github.com/zsong0348-pixel/hello-k8s-cicd
 1. 改代码后提交 Git，GitHub Actions 自动测试和构建镜像。
 2. Git 中的 k8s/deployment.yaml 决定 Kubernetes 应运行哪个版本。
 3. 正常发布只改 Git，不直接使用 kubectl edit 修改线上资源。
-
